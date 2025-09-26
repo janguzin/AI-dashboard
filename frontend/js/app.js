@@ -33,16 +33,19 @@ function showPopup(message) {
 
 // === 🚨 히스토리 추가 함수 ===
 function addToHistory(message) {
-  const container = document.getElementById("alert-history");
+  const alertList = document.getElementById("alert-list");
+  const li = document.createElement("li");
+  li.className = "flex items-start space-x-2 p-2 border-b border-slate-200";
 
-  const entry = document.createElement("div");
-  entry.className = "p-2 border-b";
-  entry.innerHTML = `
-    <div class="text-sm text-gray-600">${new Date().toLocaleTimeString()}</div>
-    <div class="font-medium text-red-600">${message}</div>
+  li.innerHTML = `
+    <div class="text-xs text-gray-500 w-20">${new Date().toLocaleTimeString()}</div>
+    <div class="flex-1 text-red-600">
+       <span class="font-semibold">(${message})</span>
+    </div>
   `;
 
-  container.prepend(entry); // 최근 알림이 위로 오도록
+  // 새 알림을 맨 위에 표시
+  alertList.prepend(li);
 }
 
 // 소켓 이벤트: 정상 데이터
@@ -56,7 +59,7 @@ socket.on("data", (res) => {
   if (y > 1300) {
     console.log("🚨 알림 발생:", y);
     showPopup(`⚠️ 예측치를 초과했습니다 (${y} kWh)`);
-    addToHistory(`⚠️ 예측치를 초과했습니다 (${y} kWh)`);
+    addToHistory(`${y} kWh`);
   }
 });
 
