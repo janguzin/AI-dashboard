@@ -34,16 +34,22 @@ function showPopup(message) {
 
 // 소켓 이벤트: 데이터 수신
 socket.on("data", (res) => {
-  console.log("📊 현재 전력 사용량:", res.usage);
-
-  const x = new Date().toLocaleTimeString(); // 시간 라벨
+  const x = new Date().toLocaleTimeString();
   const y = res.usage;
 
-  // 차트 업데이트 (최대 20개까지만 유지)
+  // 차트 업데이트
   chart.series[0].addPoint([x, y], true, chart.series[0].data.length >= 20);
 
-  // 예측 기준 초과 → 팝업
+  // 예측 기준값 초과시 알림
   if (y > 1300) {
+    console.log("🚨 알림 발생:", y);
     showPopup(`⚠️ 예측치를 초과했습니다 (${y} kWh)`);
   }
 });
+
+socket.on("alert", (res) => {
+  console.log("🚨 알림:", res.message);
+  showPopup(res.message);
+});
+
+

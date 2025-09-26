@@ -25,13 +25,11 @@ io.on("connection", (socket) => {
     console.log("측정값:", usage);
 
     if (usage > PREDICT_THRESHOLD) {
-      socket.emit("alert", {
-        usage,
-        message: `⚠️ 예측치를 초과했습니다 (${usage} kWh)`
-      });
-    } else {
-      socket.emit("data", { usage });
-    }
+  socket.emit("alert", { usage, message: `⚠️ 예측치를 초과했습니다 (${usage} kWh)` });
+} else {
+  socket.emit("data", { usage });
+}
+
   }, 5000);
 });
 
