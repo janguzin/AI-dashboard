@@ -2,7 +2,7 @@
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
-const fs = require("fs");        // ⚡️ 여기 반드시 필요
+const fs = require("fs");        
 const csv = require("csv-parser");
 
 // ✅ 2. 서버 세팅
@@ -17,15 +17,22 @@ let csvData = [];
 fs.createReadStream("2508.csv")
   .pipe(csv())
   .on("data", (row) => {
-    if (row["Usage_15min"] && row["Local_Time"]) {
+    // ⚡️ 실제 헤더 이름 확인을 위해 출력
+    console.log("CSV Row:", row);
+
+    // 공백 제거해서 헤더 접근
+    const time = row["Local Time"]?.trim();   // ⚡️ Local Time (언더바 ❌, 공백 ⭕)
+    const usage = row["Usage_15min"]?.trim(); // ⚡️ Usage_15min
+
+    if (time && usage) {
       csvData.push({
-        time: row["Local_Time"],           // 시간 저장
-        usage: Number(row["Usage_15min"])  // 사용량 저장
+        time,
+        usage: Number(usage)
       });
     }
   })
   .on("end", () => {
-    console.log("CSV 파일 로드 완료. 최종 데이터 개수:", csvData.length);
+    console.log("CSV 파일 로드 완료 ✅ 최종 데이터 개수:", csvData.length);
   });
 
 // ✅ 4. 소켓 통신

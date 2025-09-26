@@ -59,6 +59,11 @@ socket.on("data", (res) => {
   if (y > 20) {
     console.log("🚨 알림 발생:", x, y);
     addToHistory(x, y);   // ✅ Local Time + 값 기록
+  } 
+
+  if (y < 10) {
+    console.log("ℹ️ 저전력 알림:", x, y);
+    addToHistory(x, `⚡ 전력이 적게 사용되고 있어요. 확인해보세요. (${y} kWh)`);
   }
 });
 
