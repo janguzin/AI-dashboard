@@ -50,13 +50,13 @@ function addToHistory(message) {
 
 // 소켓 이벤트: 정상 데이터
 socket.on("data", (res) => {
-  const x = new Date().toLocaleTimeString();
+  const x = res.time;   // ✅ CSV에서 온 Local Time
   const y = res.usage;
 
   // 차트 업데이트
   chart.series[0].addPoint([x, y], true, chart.series[0].data.length >= 20);
 
-  if (y > 1300) {
+  if (y > 20) {
     console.log("🚨 알림 발생:", y);
     //showPopup(`⚠️ 예측치를 초과했습니다 (${y} kWh)`);
     addToHistory(`${y} kWh`);
