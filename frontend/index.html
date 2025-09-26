@@ -74,65 +74,18 @@
       <div id="realtime-chart" class="h-64"></div>
     </div>
 
-    <!-- 이상치 기록 (그래프 우측) -->
+    <!-- 이상치 기록 -->
     <div id="alert-history" class="bg-white rounded-lg shadow p-4 mt-6 h-64 overflow-y-auto">
-  <h3 class="font-semibold mb-2">이상치 기록 (실시간)</h3>
-  <ul id="alert-list" class="space-y-3 text-sm text-slate-700"></ul>
-</div>
-
+      <h3 class="font-semibold mb-2">이상치 기록 (실시간)</h3>
+      <ul id="alert-list" class="space-y-3 text-sm text-slate-700"></ul>
+    </div>
   </div>
 
-  <!-- Middle Row - Prediction vs Actual & Maintenance Insights -->
-  <div id="middle-row" class="grid grid-cols-2 gap-6 mb-6">
-    <!-- Prediction vs Actual -->
+  <!-- Middle Row - 전년/전월 비교 -->
+  <div id="middle-row" class="grid grid-cols-1 gap-6 mb-6">
     <div id="prediction-actual-card" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-      <h3 class="text-lg font-semibold text-slate-800 mb-4">예측 vs 실제</h3>
-      <div id="prediction-chart" class="h-72"></div>
-    </div>
-
-    <!-- Maintenance Insights -->
-    <div id="maintenance-insights-card" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-      <h3 class="text-lg font-semibold text-slate-800 mb-4">유지보수 인사이트</h3>
-      <div class="space-y-4">
-        <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-              <i class="fa-solid fa-leaf text-green-600 text-xl"></i>
-              <div>
-                <h4 class="font-semibold text-green-800">에너지 효율</h4>
-                <p class="text-sm text-green-600">95.2%</p>
-              </div>
-            </div>
-            <div class="text-green-600 text-2xl font-bold">↑</div>
-          </div>
-        </div>
-        
-        <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-              <i class="fa-solid fa-won-sign text-blue-600 text-xl"></i>
-              <div>
-                <h4 class="font-semibold text-blue-800">비용 절감</h4>
-                <p class="text-sm text-blue-600">₩234,000</p>
-              </div>
-            </div>
-            <div class="text-blue-600 text-sm">이번 달</div>
-          </div>
-        </div>
-        
-        <div class="p-4 bg-orange-50 border border-orange-200 rounded-lg">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-              <i class="fa-solid fa-exclamation-circle text-orange-600 text-xl"></i>
-              <div>
-                <h4 class="font-semibold text-orange-800">조치 필요</h4>
-                <p class="text-sm text-orange-600">3개 항목</p>
-              </div>
-            </div>
-            <button class="text-orange-600 text-sm hover:underline">보기</button>
-          </div>
-        </div>
-      </div>
+      <h3 class="text-lg font-semibold text-slate-800 mb-4">전년/전월 비교</h3>
+      <div id="prediction-chart" class="h-96"></div>
     </div>
   </div>
 
@@ -153,5 +106,25 @@
 <!-- Socket.io & App.js -->
 <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 <script src="./js/app.js"></script>
+
+<!-- Graph Script -->
+<script>
+Highcharts.chart("prediction-chart", {
+  chart: { type: "line", backgroundColor: "transparent" },
+  title: { text: null },
+  credits: { enabled: false },
+  xAxis: {
+    categories: ["1일","2일","3일","4일","5일","6일","7일"],
+    title: { text: "날짜" }
+  },
+  yAxis: { title: { text: "전력 사용량 (kWh)" } },
+  series: [
+    { name: "2024년 8월", data: [120,140,160,180,170,165,150], color: "#3b82f6" },
+    { name: "2025년 7월", data: [130,150,170,160,180,175,160], color: "#22c55e" },
+    { name: "2025년 8월", data: [140,160,190,200,210,205,190], color: "#ef4444", lineWidth: 4 }
+  ]
+});
+</script>
+
 </body>
 </html>
