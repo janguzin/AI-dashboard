@@ -40,7 +40,7 @@ function addToHistory(message) {
   li.innerHTML = `
     <div class="text-xs text-gray-500 w-20">${new Date().toLocaleTimeString()}</div>
     <div class="flex-1 text-red-600">
-       <span class="font-semibold">(${message})</span>
+       ⚠️ 예측치를 초과했습니다<span class="font-semibold">(${message})</span>
     </div>
   `;
 
@@ -58,7 +58,7 @@ socket.on("data", (res) => {
 
   if (y > 1300) {
     console.log("🚨 알림 발생:", y);
-    showPopup(`⚠️ 예측치를 초과했습니다 (${y} kWh)`);
+    //showPopup(`⚠️ 예측치를 초과했습니다 (${y} kWh)`);
     addToHistory(`${y} kWh`);
   }
 });
