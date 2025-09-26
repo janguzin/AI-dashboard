@@ -10,29 +10,17 @@ const io = new Server(server, {
   cors: { origin: "*" }
 });
 
-// CSV 데이터 로드
+// CSV 데이터 로드 (차분 없음, 그대로 사용)
 let csvData = [];
-fs.createReadStream("2508_M_7_01.csv")
+fs.createReadStream("2508.csv")
   .pipe(csv())
   .on("data", (row) => {
-    if (row["Real Energy Into the Load"]) {
-      csvData.push(Number(row["Real Energy Into the Load"]));
+    if (row["Usage_15min"]) {  // ✅ 15분 단위 사용량 그대로 push
+      csvData.push(Number(row["Usage_15min"]));
     }
   })
   .on("end", () => {
-    console.log("CSV 파일 로드 완료. 원본 데이터 개수:", csvData.length);
-
-    // ✅ 적산 → 차분 변환
-    let diffData = [];
-    for (let i = 1; i < csvData.length; i++) {
-      const diff = csvData[i] - csvData[i - 1];
-      if (diff >= 0) {   // 음수는 제거 (센서 리셋 등)
-        diffData.push(diff);
-      }
-    }
-
-    csvData = diffData;
-    console.log("차분 데이터 변환 완료. 최종 데이터 개수:", csvData.length);
+    console.log("CSV 파일 로드 완료 ✅ 데이터 개수:", csvData.length);
   });
 
 // 클라이언트 연결 시
