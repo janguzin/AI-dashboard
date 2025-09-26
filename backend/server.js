@@ -2,7 +2,7 @@
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
-const fs = require("fs");
+const fs = require("fs");        // ⚡️ 여기 반드시 필요
 const csv = require("csv-parser");
 
 // ✅ 2. 서버 세팅
@@ -17,10 +17,10 @@ let csvData = [];
 fs.createReadStream("2508.csv")
   .pipe(csv())
   .on("data", (row) => {
-    if (row["Usage_15min"] && row["Local Time"]) {   // ⚡️ 헤더명 고침
+    if (row["Usage_15min"] && row["Local_Time"]) {
       csvData.push({
-        time: row["Local Time"],                    // ⚡️ Local Time
-        usage: Number(row["Usage_15min"])           // ⚡️ Usage_15min
+        time: row["Local_Time"],           // 시간 저장
+        usage: Number(row["Usage_15min"])  // 사용량 저장
       });
     }
   })

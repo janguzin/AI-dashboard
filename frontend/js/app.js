@@ -32,15 +32,15 @@ function showPopup(message) {
 }
 
 // === 🚨 히스토리 추가 함수 ===
-function addToHistory(message) {
+function addToHistory(time, usage) {
   const alertList = document.getElementById("alert-list");
   const li = document.createElement("li");
   li.className = "flex items-start space-x-2 p-2 border-b border-slate-200";
 
   li.innerHTML = `
-    <div class="text-xs text-gray-500 w-20">${new Date().toLocaleTimeString()}</div>
+    <div class="text-xs text-gray-500 w-24">${time}</div>
     <div class="flex-1 text-red-600">
-       ⚠️ 예측치를 초과했습니다<span class="font-semibold">(${message})</span>
+       ⚠️ 예측치를 초과했습니다 <span class="font-semibold">(${usage} kWh)</span>
     </div>
   `;
 
@@ -50,16 +50,15 @@ function addToHistory(message) {
 
 // 소켓 이벤트: 정상 데이터
 socket.on("data", (res) => {
-  const x = res.time;   // ✅ CSV에서 온 Local Time
+  const x = res.time;   // ✅ CSV Local Time
   const y = res.usage;
 
   // 차트 업데이트
   chart.series[0].addPoint([x, y], true, chart.series[0].data.length >= 20);
 
   if (y > 20) {
-    console.log("🚨 알림 발생:", y);
-    //showPopup(`⚠️ 예측치를 초과했습니다 (${y} kWh)`);
-    addToHistory(`${y} kWh`);
+    console.log("🚨 알림 발생:", x, y);
+    addToHistory(x, y);   // ✅ Local Time + 값 기록
   }
 });
 
@@ -67,5 +66,4 @@ socket.on("data", (res) => {
 socket.on("alert", (res) => {
   console.log("🚨 알림:", res.message);
   showPopup(res.message);
-  addToHistory(res.message);
 });
